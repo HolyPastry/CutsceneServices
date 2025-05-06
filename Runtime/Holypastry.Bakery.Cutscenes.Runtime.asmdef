@@ -1,0 +1,17 @@
+{
+    "name": "Holypastry.Bakery.Cutscenes.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0762e03342273496088ece273e8c937e",
+        "GUID:96308c8b64ee446d19b379452820aff9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

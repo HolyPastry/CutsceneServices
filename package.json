@@ -1,0 +1,21 @@
+{
+    "name": "com.holypastry.bakery.cutscenes",
+    "version": "0.1.2",
+    "displayName": "Cutscene Services",
+    "description": "A wrapper around Timelines with some additional tracks",
+    "unity": "2022.3",
+    "unityRelease": "42f1",
+    "hideInEditor": false,
+    "author": {
+        "name": "Sebastien Berton",
+        "email": "sebasti1.berton@gmail.com",
+        "url": "https://github.com/HolyPastry"
+    },
+    "samples": [
+        {
+            "displayName": "Playable Tracks",
+            "description": "Additional Cutscene tracks that work with the Bakery",
+            "path": "Samples~/Tracks"
+        }
+    ]
+}
