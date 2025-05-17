@@ -22,9 +22,9 @@ namespace Holypastry.Bakery.Cutscenes
 
         public WaitUntil WaitUntilEnded => new(() => _ended);
 
-        public static event Action<GameObject> OnCutsceneEnd = delegate { };
-        public static event Action<GameObject> OnCutsceneStart = delegate { };
-        public static event Action<GameObject> OnCutsceneSkipped = delegate { };
+        public static event Action<CutsceneTag> OnCutsceneEnd = delegate { };
+        public static event Action<CutsceneTag> OnCutsceneStart = delegate { };
+        public static event Action<CutsceneTag> OnCutsceneSkipped = delegate { };
 
         public static Action<CutsceneTag> PlayCutsceneRequest = delegate { };
 
@@ -62,14 +62,14 @@ namespace Holypastry.Bakery.Cutscenes
             _playableDirector.stopped += EndCutscene;
 
             _playableDirector.Play();
-            OnCutsceneStart.Invoke(gameObject);
+            OnCutsceneStart.Invoke(_cutsceneTag);
 
         }
 
         public void Skip()
         {
             _playableDirector.Stop();
-            OnCutsceneSkipped.Invoke(gameObject);
+            OnCutsceneSkipped.Invoke(_cutsceneTag);
         }
 
         private void EndCutscene(PlayableDirector director)
@@ -84,7 +84,7 @@ namespace Holypastry.Bakery.Cutscenes
             if (_goBackToGameplayAfterCutscene)
             {
                 _ended = true;
-                OnCutsceneEnd?.Invoke(gameObject);
+                OnCutsceneEnd?.Invoke(_cutsceneTag);
             }
 
         }
