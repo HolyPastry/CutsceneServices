@@ -9,12 +9,12 @@ using UnityEngine.Playables;
 
 namespace Holypastry.Bakery.Cutscenes
 {
-
     public class Cutscene : MonoBehaviour
     {
+        [SerializeField] private CutsceneTag _cutsceneTag;
         [SerializeField] private PlayableDirector _playableDirector;
 
-        [SerializeField] private List<Cutscene> _nextCutscenes;
+        //   [SerializeField] private List<Cutscene> _nextCutscenes;
 
         [SerializeField] private bool _goBackToGameplayAfterCutscene = true;
 
@@ -26,13 +26,36 @@ namespace Holypastry.Bakery.Cutscenes
         public static event Action<GameObject> OnCutsceneStart = delegate { };
         public static event Action<GameObject> OnCutsceneSkipped = delegate { };
 
+        public static Action<CutsceneTag> PlayCutsceneRequest = delegate { };
+
+
+        void OnEnable()
+        {
+            PlayCutsceneRequest += PlayCutscene;
+        }
+
+        void OnDisable()
+        {
+            PlayCutsceneRequest -= PlayCutscene;
+        }
+
         void OnDestroy()
         {
             _playableDirector.stopped -= EndCutscene;
 
         }
 
-        internal bool PlayCutscene()
+        private void PlayCutscene(CutsceneTag tag)
+        {
+            if (_cutsceneTag == tag)
+            {
+                PlayCutscene();
+            }
+        }
+
+
+
+        public void PlayCutscene()
         {
             _ended = false;
 
@@ -40,7 +63,7 @@ namespace Holypastry.Bakery.Cutscenes
 
             _playableDirector.Play();
             OnCutsceneStart.Invoke(gameObject);
-            return true;
+
         }
 
         public void Skip()
@@ -53,10 +76,10 @@ namespace Holypastry.Bakery.Cutscenes
         {
             _playableDirector.stopped -= EndCutscene;
 
-            bool anyCutscenePlayed = false;
-            if (_nextCutscenes.Count > 0)
-                foreach (var cutscene in _nextCutscenes)
-                    anyCutscenePlayed |= cutscene.PlayCutscene();
+            //bool anyCutscenePlayed = false;
+            // if (_nextCutscenes.Count > 0)
+            //     foreach (var cutscene in _nextCutscenes)
+            //         anyCutscenePlayed |= cutscene.PlayCutscene();
 
             if (_goBackToGameplayAfterCutscene)
             {
