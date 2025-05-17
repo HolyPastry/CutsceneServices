@@ -21,6 +21,7 @@ namespace Holypastry.Bakery.Cutscenes
         private bool _ended;
 
         public WaitUntil WaitUntilEnded => new(() => _ended);
+        public CutsceneTag Tag => _cutsceneTag;
 
         public static event Action<CutsceneTag> OnCutsceneEnd = delegate { };
         public static event Action<CutsceneTag> OnCutsceneStart = delegate { };
