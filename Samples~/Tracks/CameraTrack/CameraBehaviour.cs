@@ -17,7 +17,7 @@ namespace Holypastry.Bakery.Custscenes
                 CameraReference = CameraController.CameraReference;
 
             if (CameraReference != null)
-                CameraServices.SetCamera(CameraReference, null, null);
+                CameraServices.SetCamera(CameraReference);
         }
 
         public override void OnBehaviourPause(Playable playable, FrameData info)
