@@ -9,14 +9,12 @@ namespace Holypastry.Bakery.Cutscenes
     {
         [SerializeField] private Cutscene _cutscene;
 
-        protected override IEnumerator Routine()
+        public override IEnumerator Routine()
         {
             yield return FlowServices.WaitUntilReady();
 
             _cutscene.PlayCutscene();
             yield return _cutscene.WaitUntilEnded;
-
-            EndScript();
         }
     }
 }
