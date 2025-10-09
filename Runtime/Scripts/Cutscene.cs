@@ -1,6 +1,5 @@
 using System;
-
-using System.Collections.Generic;
+using System.Collections;
 
 using UnityEngine;
 using UnityEngine.Playables;
@@ -14,12 +13,7 @@ namespace Holypastry.Bakery.Cutscenes
         [SerializeField] private CutsceneTag _cutsceneTag;
         [SerializeField] private PlayableDirector _playableDirector;
 
-        //   [SerializeField] private List<Cutscene> _nextCutscenes;
-
-        [SerializeField] private bool _goBackToGameplayAfterCutscene = true;
-
         private bool _ended;
-
         public WaitUntil WaitUntilEnded => new(() => _ended);
         public CutsceneTag Tag => _cutsceneTag;
 
@@ -27,44 +21,61 @@ namespace Holypastry.Bakery.Cutscenes
         public static event Action<CutsceneTag> OnCutsceneStart = delegate { };
         public static event Action<CutsceneTag> OnCutsceneSkipped = delegate { };
 
-        public static Action<CutsceneTag> PlayCutsceneRequest = delegate { };
+        public static Action<CutsceneTag> PlayRequest = delegate { };
 
 
         void OnEnable()
         {
-            PlayCutsceneRequest += PlayCutscene;
+            PlayRequest += Play;
         }
 
         void OnDisable()
         {
-            PlayCutsceneRequest -= PlayCutscene;
+            PlayRequest -= Play;
         }
 
         void OnDestroy()
         {
-            _playableDirector.stopped -= EndCutscene;
-
+            StopAllCoroutines();
         }
 
-        private void PlayCutscene(CutsceneTag tag)
+        private void Play(CutsceneTag tag)
         {
-            if (_cutsceneTag == tag)
-            {
-                PlayCutscene();
-            }
+            if (_cutsceneTag != tag) return;
+
+            PlayCutscene();
         }
-
-
 
         public void PlayCutscene()
         {
             _ended = false;
-
-            _playableDirector.stopped += EndCutscene;
-
             _playableDirector.Play();
             OnCutsceneStart.Invoke(_cutsceneTag);
+            StartCoroutine(CheckTimelineEnd());
 
+        }
+
+        private IEnumerator CheckTimelineEnd()
+        {
+            while (true)
+            {
+                yield return null;
+                switch (_playableDirector.extrapolationMode)
+                {
+                    case DirectorWrapMode.Loop:
+                        yield break;
+
+                    case DirectorWrapMode.Hold:
+                        if (_playableDirector.time >= _playableDirector.duration)
+                            EndCutscene();
+                        break;
+
+                    case DirectorWrapMode.None:
+                        if (_playableDirector.state != PlayState.Playing)
+                            EndCutscene();
+                        break;
+                }
+            }
         }
 
         public void Skip()
@@ -73,21 +84,11 @@ namespace Holypastry.Bakery.Cutscenes
             OnCutsceneSkipped.Invoke(_cutsceneTag);
         }
 
-        private void EndCutscene(PlayableDirector director)
+        private void EndCutscene()
         {
-            _playableDirector.stopped -= EndCutscene;
-
-            //bool anyCutscenePlayed = false;
-            // if (_nextCutscenes.Count > 0)
-            //     foreach (var cutscene in _nextCutscenes)
-            //         anyCutscenePlayed |= cutscene.PlayCutscene();
-
-            if (_goBackToGameplayAfterCutscene)
-            {
-                _ended = true;
-                OnCutsceneEnd?.Invoke(_cutsceneTag);
-            }
-
+            StopAllCoroutines();
+            _ended = true;
+            OnCutsceneEnd?.Invoke(_cutsceneTag);
         }
     }
 }
