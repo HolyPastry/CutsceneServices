@@ -14,6 +14,7 @@ namespace Holypastry.Bakery.Cutscenes
         [SerializeField] private PlayableDirector _playableDirector;
 
         private bool _ended;
+
         public WaitUntil WaitUntilEnded => new(() => _ended);
         public CutsceneTag Tag => _cutsceneTag;
 
@@ -22,16 +23,19 @@ namespace Holypastry.Bakery.Cutscenes
         public static event Action<CutsceneTag> OnCutsceneSkipped = delegate { };
 
         public static Action<CutsceneTag> PlayRequest = delegate { };
+        public Func<bool> IsPlaying = () => false;
 
 
         void OnEnable()
         {
             PlayRequest += Play;
+            IsPlaying = () => !_ended;
         }
 
         void OnDisable()
         {
             PlayRequest -= Play;
+            IsPlaying = () => false;
         }
 
         void OnDestroy()
