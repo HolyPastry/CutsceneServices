@@ -23,7 +23,7 @@ namespace Holypastry.Bakery.Cutscenes
         public static event Action<CutsceneTag> OnCutsceneSkipped = delegate { };
 
         public static Action<CutsceneTag> PlayRequest = delegate { };
-        public Func<bool> IsPlaying = () => false;
+        public static Func<bool> IsPlaying = () => false;
 
 
         void OnEnable()
