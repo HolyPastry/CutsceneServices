@@ -29,14 +29,14 @@ namespace Holypastry.Bakery.Cutscenes
         void OnEnable()
         {
             PlayRequest += Play;
-            IsPlaying = () => !_ended;
         }
 
         void OnDisable()
         {
             PlayRequest -= Play;
-            IsPlaying = () => false;
         }
+
+
 
         void OnDestroy()
         {
@@ -53,6 +53,7 @@ namespace Holypastry.Bakery.Cutscenes
         public void PlayCutscene()
         {
             _ended = false;
+            IsPlaying = () => true;
             _playableDirector.Play();
             OnCutsceneStart.Invoke(_cutsceneTag);
             StartCoroutine(CheckTimelineEnd());
@@ -92,6 +93,7 @@ namespace Holypastry.Bakery.Cutscenes
         {
             StopAllCoroutines();
             _ended = true;
+            IsPlaying = () => false;
             OnCutsceneEnd?.Invoke(_cutsceneTag);
         }
     }
