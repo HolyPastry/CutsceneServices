@@ -1,5 +1,5 @@
 
-using Holypastry.Bakery.Cameras;
+using Bakery;
 using UnityEngine.Playables;
 
 namespace Holypastry.Bakery.Custscenes
@@ -17,7 +17,7 @@ namespace Holypastry.Bakery.Custscenes
                 CameraReference = CameraController.CameraReference;
 
             if (CameraReference != null)
-                CameraServices.SetCamera(CameraReference);
+                Cameras.Manager().SetCamera(CameraReference);
         }
 
         public override void OnBehaviourPause(Playable playable, FrameData info)

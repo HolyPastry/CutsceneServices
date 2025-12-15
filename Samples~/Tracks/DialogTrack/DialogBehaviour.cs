@@ -1,5 +1,6 @@
 
 
+using Bakery;
 using UnityEngine.Playables;
 
 namespace Holypastry.Bakery.Custscenes
@@ -15,7 +16,8 @@ namespace Holypastry.Bakery.Custscenes
             if (string.IsNullOrEmpty(InkKnot)) return;
 
             // var transition = new SceneTransition((float)playable.GetDuration());
-            DialogServices.Start(InkKnot);
+            Dialogs.Manager().Play(InkKnot);
+
             // if (EndCinematicWhenFinished)
             //     DialogEvents.OnDialogEnd += OnDialogEnd;
 

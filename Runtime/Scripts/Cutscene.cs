@@ -36,8 +36,6 @@ namespace Holypastry.Bakery.Cutscenes
             PlayRequest -= Play;
         }
 
-
-
         void OnDestroy()
         {
             StopAllCoroutines();

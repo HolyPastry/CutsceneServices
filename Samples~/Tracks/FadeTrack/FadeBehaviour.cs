@@ -1,4 +1,4 @@
-using Holypastry.Bakery.Flow;
+using Bakery;
 using UnityEngine.Playables;
 
 namespace Holypastry.Bakery.Custscenes
@@ -9,19 +9,15 @@ namespace Holypastry.Bakery.Custscenes
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
             base.OnBehaviourPlay(playable, info);
-            var transition = new SceneTransition((float)playable.GetDuration());
+
             if (transitionType == FadeType.FadeIn)
-                FlowServices.FadeIn(transition);
+                Flow.Visuals().FadeIn((float)playable.GetDuration());
             else if (transitionType == FadeType.FadeOut)
-                FlowServices.FadeOut(transition);
-
-            // Debug.Log($"Transition Play: {playable.GetDuration()}");
-
+                Flow.Visuals().FadeOut((float)playable.GetDuration());
         }
         public override void OnBehaviourPause(Playable playable, FrameData info)
         {
             base.OnBehaviourPause(playable, info);
-            // Debug.Log("Transition Pause");
         }
 
     }

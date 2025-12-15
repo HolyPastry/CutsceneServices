@@ -1,5 +1,5 @@
 
-using Holypastry.Bakery.Cameras;
+using Bakery;
 using UnityEngine;
 using UnityEngine.Playables;
 
