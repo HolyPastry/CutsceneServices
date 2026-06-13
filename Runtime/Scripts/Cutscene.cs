@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 
 
 
-namespace Holypastry.Bakery.Cutscenes
+namespace Bakery.Cutscenes
 {
     public class Cutscene : MonoBehaviour
     {
