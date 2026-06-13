@@ -36,8 +36,6 @@ namespace Bakery.Cutscenes
             PlayRequest -= Play;
         }
 
-
-
         void OnDestroy()
         {
             StopAllCoroutines();

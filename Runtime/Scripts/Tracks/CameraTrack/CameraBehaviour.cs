@@ -1,5 +1,3 @@
-
-using Bakery;
 using UnityEngine.Playables;
 
 namespace Holypastry.Bakery.Custscenes

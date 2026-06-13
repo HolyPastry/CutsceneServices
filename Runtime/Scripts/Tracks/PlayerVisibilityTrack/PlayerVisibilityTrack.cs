@@ -4,30 +4,28 @@ using UnityEngine.Timeline;
 
 namespace Holypastry.Bakery.Custscenes
 {
-    [TrackClipType(typeof(MusicClip))]
-
-    public class MusicTrack : TrackAsset
+    [TrackClipType(typeof(PlayerVisibilityClip))]
+    public class PlayerVisibilityTrack : TrackAsset
     {
-
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
             foreach (TimelineClip clip in m_Clips)
             {
-                MusicClip fadeClip = clip.asset as MusicClip;
+                PlayerVisibilityClip playerClip = clip.asset as PlayerVisibilityClip;
                 // the template variable comes from classes made with the playable wizard
 
-                if (fadeClip.MusicAction == MusicAction.PlayMusic)
+                if (playerClip.PlayerVisibility == PlayerVisibility.On)
                 {
-                    clip.displayName = "Play";
+                    clip.displayName = "Show";
                 }
-                else if (fadeClip.MusicAction == MusicAction.StopMusic)
+                else if (playerClip.PlayerVisibility == PlayerVisibility.Off)
                 {
-                    clip.displayName = "Stop";
+                    clip.displayName = "Hide";
                 }
 
             }
 
-            ScriptPlayable<MusicBehaviour> playable = ScriptPlayable<MusicBehaviour>.Create(graph, inputCount);
+            ScriptPlayable<PlayerVisibilityBehaviour> playable = ScriptPlayable<PlayerVisibilityBehaviour>.Create(graph, inputCount);
             //  playable.GetBehaviour().bodyTarget = go.GetComponent<PlayableDirector>().GetGenericBinding(this) as PetTimelineBodyTarget;
             return playable;
         }
