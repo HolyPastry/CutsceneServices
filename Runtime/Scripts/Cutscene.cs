@@ -1,17 +1,17 @@
 using System;
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.Playables;
-
-
 
 namespace Bakery.Cutscenes
 {
     public class Cutscene : MonoBehaviour
     {
-        [SerializeField] private CutsceneTag _cutsceneTag;
-        [SerializeField] private PlayableDirector _playableDirector;
+        [SerializeField]
+        private CutsceneTag _cutsceneTag;
+
+        [SerializeField]
+        private PlayableDirector _playableDirector;
 
         private bool _ended;
 
@@ -24,7 +24,7 @@ namespace Bakery.Cutscenes
 
         public static Action<CutsceneTag> PlayRequest = delegate { };
         public static Func<bool> IsPlaying = () => false;
-
+        private bool _paused;
 
         void OnEnable()
         {
@@ -43,9 +43,44 @@ namespace Bakery.Cutscenes
 
         private void Play(CutsceneTag tag)
         {
-            if (_cutsceneTag != tag) return;
+            if (_cutsceneTag != tag)
+                return;
 
             PlayCutscene();
+        }
+
+        private Coroutine WaitUntilReady()
+        {
+            return StartCoroutine(WaitUntilReadyCoroutine());
+        }
+
+        private IEnumerator WaitUntilReadyCoroutine()
+        {
+            yield return new WaitUntil(() => _playableDirector.state == PlayState.Playing);
+        }
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus && !_paused)
+            {
+                _paused = true;
+                Pause();
+            }
+            if (hasFocus && _paused)
+            {
+                _paused = false;
+                Resume();
+            }
+        }
+
+        private void Pause()
+        {
+            _playableDirector.Pause();
+        }
+
+        private void Resume()
+        {
+            _playableDirector.Resume();
         }
 
         public void PlayCutscene()
@@ -55,7 +90,6 @@ namespace Bakery.Cutscenes
             _playableDirector.Play();
             OnCutsceneStart.Invoke(_cutsceneTag);
             StartCoroutine(CheckTimelineEnd());
-
         }
 
         private IEnumerator CheckTimelineEnd()
@@ -63,6 +97,9 @@ namespace Bakery.Cutscenes
             while (true)
             {
                 yield return null;
+                if (_paused)
+                    continue;
+
                 switch (_playableDirector.extrapolationMode)
                 {
                     case DirectorWrapMode.Loop:
