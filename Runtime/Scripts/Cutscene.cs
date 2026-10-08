@@ -23,7 +23,7 @@ namespace Bakery.Cutscenes
         public static event Action<CutsceneTag> OnCutsceneSkipped = delegate { };
 
         public static Action<CutsceneTag> PlayRequest = delegate { };
-        public static Func<bool> IsPlaying = () => false;
+        public static bool IsPlaying = false;
         private bool _paused;
 
         void OnEnable()
@@ -86,7 +86,7 @@ namespace Bakery.Cutscenes
         public void PlayCutscene()
         {
             _ended = false;
-            IsPlaying = () => true;
+            IsPlaying = true;
             _playableDirector.Play();
             OnCutsceneStart.Invoke(_cutsceneTag);
             StartCoroutine(CheckTimelineEnd());
@@ -122,14 +122,31 @@ namespace Bakery.Cutscenes
         {
             _playableDirector.Stop();
             OnCutsceneSkipped.Invoke(_cutsceneTag);
+            _ended = true;
+            IsPlaying = false;
+            StopAllCoroutines();
         }
 
         private void EndCutscene()
         {
             StopAllCoroutines();
             _ended = true;
-            IsPlaying = () => false;
+            IsPlaying = false;
             OnCutsceneEnd?.Invoke(_cutsceneTag);
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ResetStatics()
+        {
+            OnCutsceneEnd = delegate { };
+            OnCutsceneStart = delegate { };
+            OnCutsceneSkipped = delegate { };
+            PlayRequest = delegate { };
+            IsPlaying = false;
+
+#if UNITY_EDITOR
+            Debug.Log("[Cutscenes] Static fields reset");
+#endif
         }
     }
 }
